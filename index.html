@@ -1,0 +1,1419 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clinique des Compétences — Rédaction Professionnelle</title>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --ink: #1a1a2e;
+            --ink-light: #4a4a6a;
+            --paper: #f5f3ee;
+            --paper-dark: #ebe8e0;
+            --accent: #c8553d;
+            --accent-muted: #e8957f;
+            --green: #2d6a4f;
+            --green-light: #d8f3dc;
+            --amber: #b5820a;
+            --amber-light: #fef3c7;
+            --border: #d4cfc4;
+            --white: #ffffff;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'DM Sans', sans-serif;
+            background: var(--paper);
+            color: var(--ink);
+            min-height: 100vh;
+            font-size: 15px;
+            line-height: 1.7;
+        }
+
+        /* ── HEADER ── */
+        .site-header {
+            background: var(--ink);
+            color: var(--paper);
+            padding: 2rem 3rem;
+            display: flex;
+            align-items: flex-start;
+            justify-content: space-between;
+            border-bottom: 3px solid var(--accent);
+        }
+
+        .header-left h1 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.9rem;
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            margin-bottom: 0.3rem;
+        }
+
+        .header-left h1 em {
+            color: var(--accent-muted);
+            font-style: italic;
+        }
+
+        .header-left .subtitle {
+            font-size: 0.8rem;
+            font-weight: 300;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            color: #9090b0;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .timer-display {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.4rem;
+            color: var(--accent-muted);
+            line-height: 1;
+        }
+
+        .timer-label {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #9090b0;
+        }
+
+        /* ── PROGRESS ── */
+        .progress-bar {
+            background: #2a2a40;
+            padding: 0.8rem 3rem;
+            display: flex;
+            gap: 0;
+            align-items: center;
+        }
+
+        .phase-indicator {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            cursor: default;
+            opacity: 0.45;
+            transition: opacity 0.3s;
+        }
+
+        .phase-indicator.active { opacity: 1; }
+        .phase-indicator.done { opacity: 0.7; }
+
+        .phase-dot {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #9090b0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            font-weight: 500;
+            color: #9090b0;
+            flex-shrink: 0;
+            transition: all 0.3s;
+        }
+
+        .phase-indicator.active .phase-dot {
+            border-color: var(--accent);
+            background: var(--accent);
+            color: white;
+        }
+
+        .phase-indicator.done .phase-dot {
+            border-color: var(--green);
+            background: var(--green);
+            color: white;
+        }
+
+        .phase-name {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #9090b0;
+            white-space: nowrap;
+        }
+
+        .phase-indicator.active .phase-name { color: var(--paper); }
+
+        .phase-sep {
+            flex: 1;
+            height: 1px;
+            background: #3a3a55;
+            margin: 0 0.5rem;
+        }
+
+        /* ── MAIN LAYOUT ── */
+        .main {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        /* ── SCREENS ── */
+        .screen { display: none; }
+        .screen.active { display: block; }
+
+        /* ── INTRO SCREEN ── */
+        .intro-banner {
+            background: var(--ink);
+            color: var(--paper);
+            border-radius: 4px;
+            padding: 3rem;
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .intro-banner::before {
+            content: '✦';
+            position: absolute;
+            right: 2rem;
+            top: 1.5rem;
+            font-size: 5rem;
+            opacity: 0.06;
+            color: var(--accent);
+        }
+
+        .intro-banner .eyebrow {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent-muted);
+            margin-bottom: 1rem;
+        }
+
+        .intro-banner h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2.2rem;
+            line-height: 1.15;
+            margin-bottom: 1.2rem;
+        }
+
+        .intro-banner h2 em {
+            font-style: italic;
+            color: var(--accent-muted);
+        }
+
+        .intro-banner p {
+            color: #c0c0d8;
+            max-width: 600px;
+            font-weight: 300;
+            font-size: 1rem;
+        }
+
+        .intro-meta {
+            display: flex;
+            gap: 2rem;
+            margin: 2rem 0;
+            padding: 1.5rem 0;
+            border-top: 1px solid #3a3a55;
+            border-bottom: 1px solid #3a3a55;
+        }
+
+        .meta-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.2rem;
+        }
+
+        .meta-value {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--accent-muted);
+        }
+
+        .meta-key {
+            font-size: 0.7rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: #7070a0;
+        }
+
+        .what-to-expect {
+            background: var(--paper);
+            border-radius: 4px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .what-to-expect h3 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: var(--ink);
+        }
+
+        .expect-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .expect-item {
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+
+        .expect-icon {
+            font-size: 1.1rem;
+            margin-top: 0.1rem;
+            flex-shrink: 0;
+        }
+
+        .expect-text strong {
+            display: block;
+            font-weight: 500;
+            font-size: 0.9rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .expect-text span {
+            font-size: 0.82rem;
+            color: var(--ink-light);
+        }
+
+        /* ── CARDS ── */
+        .card {
+            background: var(--white);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            padding: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .card-header {
+            display: flex;
+            align-items: baseline;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid var(--paper-dark);
+        }
+
+        .phase-tag {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 500;
+            background: #fdf0ed;
+            padding: 0.3rem 0.7rem;
+            border-radius: 2px;
+            white-space: nowrap;
+        }
+
+        .card-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.4rem;
+            color: var(--ink);
+        }
+
+        .card-duration {
+            margin-left: auto;
+            font-size: 0.78rem;
+            color: var(--ink-light);
+            white-space: nowrap;
+        }
+
+        /* ── TEXTS COMPARISON ── */
+        .texts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .text-sample {
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .text-sample-header {
+            background: var(--paper-dark);
+            padding: 0.6rem 1rem;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-light);
+            font-weight: 500;
+        }
+
+        .text-sample-body {
+            padding: 1.2rem;
+            font-size: 0.88rem;
+            line-height: 1.65;
+            color: var(--ink);
+        }
+
+        /* ── RADIO GROUP ── */
+        .radio-group {
+            display: flex;
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .radio-option {
+            flex: 1;
+            border: 2px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem 1.2rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+
+        .radio-option:hover { border-color: var(--accent-muted); }
+        .radio-option.selected { border-color: var(--accent); background: #fdf0ed; }
+
+        .radio-option input { display: none; }
+
+        .radio-circle {
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            border: 2px solid var(--border);
+            flex-shrink: 0;
+            transition: all 0.2s;
+        }
+
+        .radio-option.selected .radio-circle {
+            border-color: var(--accent);
+            background: var(--accent);
+        }
+
+        /* ── TEXTAREA ── */
+        .field-label {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-light);
+            font-weight: 500;
+            margin-bottom: 0.6rem;
+            display: block;
+        }
+
+        textarea {
+            width: 100%;
+            border: 1.5px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem 1.2rem;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.92rem;
+            line-height: 1.65;
+            color: var(--ink);
+            background: var(--paper);
+            resize: vertical;
+            transition: border-color 0.2s;
+            outline: none;
+        }
+
+        textarea:focus { border-color: var(--accent); }
+
+        .char-count {
+            text-align: right;
+            font-size: 0.75rem;
+            color: var(--ink-light);
+            margin-top: 0.4rem;
+        }
+
+        /* ── PODCAST INTERLUDE ── */
+        .interlude {
+            background: var(--ink);
+            border-radius: 4px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+            color: var(--paper);
+        }
+
+        .podcast-icon {
+            font-size: 2.5rem;
+            flex-shrink: 0;
+        }
+
+        .interlude-text {
+            flex: 1;
+        }
+
+        .interlude-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.18em;
+            color: var(--accent-muted);
+            margin-bottom: 0.3rem;
+        }
+
+        .interlude-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.1rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .interlude-desc {
+            font-size: 0.82rem;
+            color: #9090b0;
+            font-weight: 300;
+        }
+
+        .interlude-action {
+            font-size: 0.78rem;
+            color: var(--accent-muted);
+            text-decoration: none;
+            border: 1px solid var(--accent-muted);
+            padding: 0.5rem 1rem;
+            border-radius: 2px;
+            white-space: nowrap;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .interlude-action:hover {
+            background: var(--accent);
+            border-color: var(--accent);
+            color: white;
+        }
+
+        /* ── BRIEF BOX ── */
+        .brief-box {
+            border-left: 3px solid var(--accent);
+            background: #fdf6f4;
+            padding: 1.5rem 1.8rem;
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .brief-box .brief-label {
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: var(--accent);
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+
+        .brief-box p {
+            font-size: 0.92rem;
+            color: var(--ink);
+        }
+
+        .brief-box strong { color: var(--accent); font-weight: 500; }
+
+        /* ── AI FEEDBACK ── */
+        .feedback-loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--ink-light);
+        }
+
+        .feedback-loading .spinner {
+            width: 36px;
+            height: 36px;
+            border: 2px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.9s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        .feedback-loading p {
+            font-size: 0.85rem;
+            font-style: italic;
+        }
+
+        .feedback-result {
+            display: none;
+        }
+
+        .feedback-result.visible { display: block; }
+
+        .score-display {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            padding: 1.5rem 2rem;
+            background: var(--ink);
+            border-radius: 4px;
+            margin-bottom: 1.5rem;
+            color: var(--paper);
+        }
+
+        .score-number {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.5rem;
+            color: var(--accent-muted);
+            line-height: 1;
+        }
+
+        .score-details {
+            flex: 1;
+        }
+
+        .score-title {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.15em;
+            color: #9090b0;
+            margin-bottom: 0.3rem;
+        }
+
+        .score-verdict {
+            font-family: 'DM Serif Display', serif;
+            font-size: 1.2rem;
+        }
+
+        .dimensions-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .dimension-item {
+            background: var(--white);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1rem 1.2rem;
+        }
+
+        .dimension-name {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-light);
+            margin-bottom: 0.5rem;
+        }
+
+        .dimension-bar-bg {
+            height: 4px;
+            background: var(--paper-dark);
+            border-radius: 2px;
+            margin-bottom: 0.4rem;
+        }
+
+        .dimension-bar-fill {
+            height: 100%;
+            border-radius: 2px;
+            background: var(--accent);
+            transition: width 1s ease;
+        }
+
+        .dimension-score {
+            font-size: 0.8rem;
+            font-weight: 500;
+            color: var(--ink);
+        }
+
+        .feedback-prose {
+            font-size: 0.93rem;
+            line-height: 1.75;
+            color: var(--ink);
+            white-space: pre-wrap;
+        }
+
+        /* ── COMPARISON ── */
+        .comparison-header {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .comparison-label {
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--ink-light);
+            font-weight: 500;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .comparison-label.new { border-color: var(--green); color: var(--green); }
+
+        /* ── BUTTONS ── */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.85rem 1.8rem;
+            border-radius: 3px;
+            font-family: 'DM Sans', sans-serif;
+            font-size: 0.85rem;
+            font-weight: 500;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s;
+            letter-spacing: 0.02em;
+        }
+
+        .btn-primary {
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn-primary:hover { background: #b04030; }
+        .btn-primary:disabled { background: var(--border); color: var(--ink-light); cursor: not-allowed; }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid var(--border);
+        }
+
+        .btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+
+        .btn-green {
+            background: var(--green);
+            color: white;
+        }
+
+        .btn-green:hover { background: #235840; }
+
+        .btn-row {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            margin-top: 1.5rem;
+        }
+
+        /* ── FINAL BADGE ── */
+        .badge-display {
+            text-align: center;
+            padding: 3rem;
+            background: var(--ink);
+            border-radius: 4px;
+            color: var(--paper);
+            margin-bottom: 1.5rem;
+        }
+
+        .badge-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            display: block;
+        }
+
+        .badge-display h2 {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .badge-display p {
+            color: #9090b0;
+            font-weight: 300;
+            max-width: 500px;
+            margin: 0 auto 1.5rem;
+        }
+
+        .final-score {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3.5rem;
+            color: var(--accent-muted);
+        }
+
+        .progression-note {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: #1a3a2a;
+            color: #6fcf97;
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        /* ── INFO BOX ── */
+        .info-strip {
+            background: var(--amber-light);
+            border-left: 3px solid var(--amber);
+            padding: 1rem 1.2rem;
+            border-radius: 0 4px 4px 0;
+            margin-bottom: 1.5rem;
+            font-size: 0.88rem;
+            color: #7a5500;
+        }
+
+        /* ── HELPERS ── */
+        .text-muted { color: var(--ink-light); font-size: 0.88rem; }
+        .mt-1 { margin-top: 1rem; }
+        .mb-1 { margin-bottom: 1rem; }
+        .mb-2 { margin-bottom: 2rem; }
+        
+        p + p { margin-top: 0.8rem; }
+
+        /* Fade-in animation */
+        @keyframes fadeUp {
+            from { opacity: 0; transform: translateY(12px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .screen.active { animation: fadeUp 0.35s ease; }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .site-header { flex-direction: column; gap: 1rem; padding: 1.5rem; }
+            .texts-grid, .expect-grid, .dimensions-grid, .comparison-header { grid-template-columns: 1fr; }
+            .main { padding: 1.5rem 1rem; }
+            .progress-bar { padding: 0.8rem 1rem; }
+            .phase-name { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="site-header">
+    <div class="header-left">
+        <div class="subtitle">Clinique des Compétences · BEC · Éminéo Éducation</div>
+        <h1>Rédaction <em>Professionnelle</em></h1>
+    </div>
+    <div class="header-right">
+        <div class="timer-display" id="timer">3:30:00</div>
+        <div class="timer-label">temps imparti</div>
+    </div>
+</header>
+
+<!-- PROGRESS -->
+<nav class="progress-bar" id="progressBar">
+    <div class="phase-indicator active" id="pi-0">
+        <div class="phase-dot">1</div>
+        <span class="phase-name">Diagnostic</span>
+    </div>
+    <div class="phase-sep"></div>
+    <div class="phase-indicator" id="pi-1">
+        <div class="phase-dot">2</div>
+        <span class="phase-name">Production</span>
+    </div>
+    <div class="phase-sep"></div>
+    <div class="phase-indicator" id="pi-2">
+        <div class="phase-dot">3</div>
+        <span class="phase-name">Feedback</span>
+    </div>
+    <div class="phase-sep"></div>
+    <div class="phase-indicator" id="pi-3">
+        <div class="phase-dot">4</div>
+        <span class="phase-name">Réécriture</span>
+    </div>
+    <div class="phase-sep"></div>
+    <div class="phase-indicator" id="pi-4">
+        <div class="phase-dot">5</div>
+        <span class="phase-name">Bilan</span>
+    </div>
+</nav>
+
+<main class="main">
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 0 : INTRO                          -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen active" id="screen-intro">
+        <div class="intro-banner">
+            <div class="eyebrow">Module · Rédaction Professionnelle</div>
+            <h2>Ce que vous écrivez<br>dit <em>qui vous êtes.</em></h2>
+            <p>En entreprise, un écrit mal construit coûte du temps, de la crédibilité, parfois des contrats. Cette séance vous confronte à vos propres pratiques — sans complaisance, avec méthode.</p>
+            <div class="intro-meta">
+                <div class="meta-item">
+                    <span class="meta-value">3h30</span>
+                    <span class="meta-key">Durée totale</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-value">4</span>
+                    <span class="meta-key">Phases</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-value">2</span>
+                    <span class="meta-key">Productions écrites</span>
+                </div>
+                <div class="meta-item">
+                    <span class="meta-value">≥12/20</span>
+                    <span class="meta-key">Pour valider</span>
+                </div>
+            </div>
+            <p style="color:#c0c0d8; font-size:0.9rem; font-weight:300;">Le chronomètre démarre à votre signal. Travaillez seul(e), en silence. Les feedbacks sont générés par intelligence artificielle — ils sont directs, circonstanciés, et sans atténuation.</p>
+        </div>
+
+        <div class="what-to-expect">
+            <h3>Ce qui vous attend</h3>
+            <div class="expect-grid">
+                <div class="expect-item">
+                    <span class="expect-icon">🔍</span>
+                    <div class="expect-text">
+                        <strong>Phase 1 — Diagnostic (30 min)</strong>
+                        <span>Deux textes. Lequel est professionnel ? Vous analysez avant d'avoir appris quoi chercher.</span>
+                    </div>
+                </div>
+                <div class="expect-item">
+                    <span class="expect-icon">✍️</span>
+                    <div class="expect-text">
+                        <strong>Phase 2 — Production (90 min)</strong>
+                        <span>Un brief réel. Vous rédigez un document professionnel sur cas contextualisé.</span>
+                    </div>
+                </div>
+                <div class="expect-item">
+                    <span class="expect-icon">🎙️</span>
+                    <div class="expect-text">
+                        <strong>Pause — Ressource audio (15 min)</strong>
+                        <span>Un extrait de référence sur l'écrit professionnel, entre les deux productions.</span>
+                    </div>
+                </div>
+                <div class="expect-item">
+                    <span class="expect-icon">↩️</span>
+                    <div class="expect-text">
+                        <strong>Phase 3 — Réécriture (45 min)</strong>
+                        <span>Vous recevez un feedback IA sur votre première production. Vous réécrivez.</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-primary" onclick="startSession()">Démarrer la séance →</button>
+            <span class="text-muted">Le chronomètre s'active au démarrage</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 1 : PHASE 1 — DIAGNOSTIC           -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-phase1">
+        <div class="card">
+            <div class="card-header">
+                <span class="phase-tag">Phase 1</span>
+                <span class="card-title">Le diagnostic</span>
+                <span class="card-duration">⏱ 30 min</span>
+            </div>
+
+            <p>Voici deux emails professionnels envoyés dans le même contexte : un chargé de communication qui présente un bilan de campagne à son directeur. L'un est efficace. L'autre ne l'est pas.</p>
+            <p class="text-muted mt-1">Lisez les deux attentivement. Vous n'avez pas encore les critères — c'est précisément l'intérêt.</p>
+
+            <div class="texts-grid mt-1">
+                <div class="text-sample">
+                    <div class="text-sample-header">Texte A</div>
+                    <div class="text-sample-body">Bonjour,
+
+Suite à notre campagne du mois dernier, je voulais vous faire un retour. Globalement ça s'est plutôt bien passé, on a eu beaucoup d'engagements sur les réseaux et les gens ont bien répondu à nos contenus. Le taux de clics était bon je pense.
+
+Il y a eu quelques problèmes au niveau du planning mais on a géré. Pour la prochaine fois je pense qu'on devrait faire pareil mais peut-être avec plus de budget pour toucher plus de monde.
+
+Bonne journée</div>
+                </div>
+                <div class="text-sample">
+                    <div class="text-sample-header">Texte B</div>
+                    <div class="text-sample-body">Bonjour Monsieur Renard,
+
+Veuillez trouver ci-joint le bilan de notre campagne "Rentrée 2024" (15–30 sept.).
+
+Résultats clés :
+• Portée organique : 42 000 impressions (+18% vs objectif)
+• Taux d'engagement : 4,7% (référence secteur : 2,1%)
+• Coût par lead : 3,20€ (budget initial : 4€)
+
+Point de vigilance : le décalage de 3 jours sur le lancement Stories a réduit notre fenêtre d'exposition. Recommandation : verrouiller le rétroplanning J-10 pour les prochaines campagnes.
+
+Je reste disponible pour en discuter.
+
+Cordialement,
+[Prénom Nom], Chargé(e) de communication</div>
+                </div>
+            </div>
+
+            <p class="mb-1"><strong>Votre analyse :</strong> Lequel est le texte professionnel efficace, et pourquoi ? Identifiez au minimum 4 éléments qui fondent votre jugement.</p>
+
+            <label class="field-label">Votre choix</label>
+            <div class="radio-group">
+                <label class="radio-option" onclick="selectRadio(this, 'A')">
+                    <div class="radio-circle"></div>
+                    <span>Le Texte A est plus professionnel</span>
+                </label>
+                <label class="radio-option" onclick="selectRadio(this, 'B')">
+                    <div class="radio-circle"></div>
+                    <span>Le Texte B est plus professionnel</span>
+                </label>
+            </div>
+
+            <label class="field-label">Votre analyse détaillée</label>
+            <textarea id="phase1-analysis" rows="8" placeholder="Expliquez votre choix avec précision. Quels éléments spécifiques vous ont guidé(e) ? Structure, ton, contenu, lisibilité, objectif du message..." oninput="updateCharCount('phase1-analysis', 'count1')"></textarea>
+            <div class="char-count"><span id="count1">0</span> caractères · visez 300 minimum</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" id="btn-phase1" onclick="submitPhase1()" disabled>Soumettre mon analyse →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 2 : FEEDBACK PHASE 1               -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-feedback1">
+        <div class="card">
+            <div class="card-header">
+                <span class="phase-tag">Révélation</span>
+                <span class="card-title">Ce que révèle votre analyse</span>
+            </div>
+
+            <div id="feedback1-loading" class="feedback-loading">
+                <div class="spinner"></div>
+                <p>Analyse de votre diagnostic en cours…</p>
+            </div>
+
+            <div id="feedback1-result" class="feedback-result">
+                <div class="score-display">
+                    <div class="score-number" id="f1-score">—</div>
+                    <div class="score-details">
+                        <div class="score-title">Score · Acuité d'analyse</div>
+                        <div class="score-verdict" id="f1-verdict">—</div>
+                    </div>
+                </div>
+                <div class="feedback-prose" id="f1-feedback-text"></div>
+            </div>
+        </div>
+
+        <div class="interlude">
+            <div class="podcast-icon">🎙️</div>
+            <div class="interlude-text">
+                <div class="interlude-label">Pause · Ressource audio recommandée</div>
+                <div class="interlude-title">« L'écrit professionnel n'est pas de la littérature »</div>
+                <div class="interlude-desc">Extrait — Les Règles de l'art d'écrire au travail · Romain Bisseret · France Culture · 18 min</div>
+            </div>
+            <a class="interlude-action" href="https://www.radiofrance.fr/franceculture" target="_blank">Écouter →</a>
+        </div>
+
+        <div class="btn-row">
+            <button class="btn btn-primary" id="btn-to-phase2" onclick="goToPhase2()">Passer à la production → </button>
+            <span class="text-muted">Phase 2 · 90 min</span>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 3 : PHASE 2 — PRODUCTION           -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-phase2">
+        <div class="info-strip">
+            ⚠️ Cette phase représente le cœur de la séance. Prenez le temps de lire l'intégralité du brief avant d'écrire une seule ligne.
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="phase-tag">Phase 2</span>
+                <span class="card-title">La production</span>
+                <span class="card-duration">⏱ 90 min</span>
+            </div>
+
+            <div class="brief-box">
+                <div class="brief-label">Brief · Contexte de la mission</div>
+                <p>Vous êtes <strong>chargé(e) de communication</strong> chez <strong>Vélocité</strong>, une startup de mobilité urbaine (vélos en libre-service, 3 villes, 12 employés). La direction vient d'apprendre qu'un article négatif paraîtra demain dans la presse locale : un journaliste pointe un problème récurrent de vélos en mauvais état dans le quartier Bellevue.</p>
+                <p class="mt-1">Les faits : sur 80 vélos en circulation à Bellevue, 9 ont été signalés défectueux au cours du mois. Le taux de maintenance corrective est de 11,25% — la moyenne du secteur est à 8%. La direction a déclenché une révision complète du parc dans ce quartier, effective depuis 72h.</p>
+                <p class="mt-1"><strong>Votre mission :</strong> Rédiger un communiqué de presse à destination des rédactions locales. Il doit reconnaître la situation, présenter les mesures prises, et protéger la réputation de Vélocité sans nier les faits.</p>
+            </div>
+
+            <p class="mb-1"><strong>Contraintes formelles :</strong> entre 250 et 400 mots. Structure libre, mais chaque paragraphe doit avoir une fonction claire. Vous serez évalué(e) sur 5 dimensions : structure, ton, précision factuelle, concision, impact.</p>
+
+            <label class="field-label">Votre communiqué de presse</label>
+            <textarea id="phase2-text" rows="18" placeholder="Rédigez votre communiqué ici. Pensez à : l'objet du communiqué, le contexte, les faits, les mesures prises, et une conclusion orientée vers l'avenir." oninput="updateCharCount('phase2-text', 'count2')"></textarea>
+            <div class="char-count"><span id="count2">0</span> mots · visez entre 250 et 400</div>
+
+            <div class="btn-row">
+                <button class="btn btn-primary" id="btn-phase2" onclick="submitPhase2()" disabled>Soumettre ma production →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 4 : FEEDBACK PHASE 2 + RÉÉCRITURE  -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-feedback2">
+        <div class="card">
+            <div class="card-header">
+                <span class="phase-tag">Feedback IA</span>
+                <span class="card-title">Analyse de votre communiqué</span>
+            </div>
+
+            <div id="feedback2-loading" class="feedback-loading">
+                <div class="spinner"></div>
+                <p>Analyse de votre production en cours…</p>
+            </div>
+
+            <div id="feedback2-result" class="feedback-result">
+                <div class="score-display">
+                    <div class="score-number" id="f2-score">—</div>
+                    <div class="score-details">
+                        <div class="score-title">Score · Production initiale</div>
+                        <div class="score-verdict" id="f2-verdict">—</div>
+                    </div>
+                </div>
+
+                <div class="dimensions-grid" id="dimensions-grid"></div>
+
+                <div class="feedback-prose" id="f2-feedback-text"></div>
+            </div>
+        </div>
+
+        <!-- RÉÉCRITURE -->
+        <div class="card" id="rewrite-card" style="display:none;">
+            <div class="card-header">
+                <span class="phase-tag">Phase 3</span>
+                <span class="card-title">La réécriture</span>
+                <span class="card-duration">⏱ 45 min</span>
+            </div>
+
+            <p>Vous avez le feedback. Vous avez identifié ce qui ne fonctionnait pas. Maintenant : réécrivez.</p>
+            <p class="text-muted mt-1">Il ne s'agit pas de corriger à la marge. Reprenez votre texte avec un regard neuf en tenant compte de chacune des dimensions pointées. Le score final comparera les deux versions.</p>
+
+            <div class="comparison-header mt-1">
+                <div class="comparison-label">Version initiale</div>
+                <div class="comparison-label new">Votre réécriture</div>
+            </div>
+
+            <div class="texts-grid">
+                <div class="text-sample">
+                    <div class="text-sample-header">Votre premier jet</div>
+                    <div class="text-sample-body" id="original-text-display" style="font-size:0.82rem; color: var(--ink-light);"></div>
+                </div>
+                <div style="display:flex;flex-direction:column;">
+                    <textarea id="phase3-text" rows="14" placeholder="Réécrivez votre communiqué ici…" oninput="updateCharCount('phase3-text', 'count3')"></textarea>
+                    <div class="char-count"><span id="count3">0</span> mots</div>
+                </div>
+            </div>
+
+            <div class="btn-row">
+                <button class="btn btn-green" id="btn-phase3" onclick="submitPhase3()" disabled>Soumettre ma réécriture →</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════ -->
+    <!-- SCREEN 5 : BILAN FINAL                    -->
+    <!-- ══════════════════════════════════════════ -->
+    <div class="screen" id="screen-final">
+        <div class="badge-display" id="badge-display">
+            <span class="badge-icon" id="badge-icon">🏅</span>
+            <h2 id="final-title">Bilan de séance</h2>
+            <p id="final-subtitle">Votre parcours sur ce module est terminé.</p>
+            <div class="final-score" id="final-score-display">—</div>
+            <div class="progression-note" id="progression-note" style="display:none;">
+                ↑ <span id="progression-text"></span>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Synthèse comparative</span>
+            </div>
+            <div id="final-comparison" class="feedback-prose"></div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <span class="card-title">Ce que vous emportez</span>
+            </div>
+            <div id="final-takeaway" class="feedback-prose"></div>
+        </div>
+    </div>
+
+</main>
+
+<script>
+// ══════════════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════════════
+const state = {
+    currentScreen: 'intro',
+    timerInterval: null,
+    secondsLeft: 3 * 3600 + 30 * 60,
+    selectedRadio: null,
+    phase1Analysis: '',
+    phase2Text: '',
+    phase3Text: '',
+    score1: 0,
+    score2: 0,
+    score3: 0,
+};
+
+// ══════════════════════════════════════════════════
+// TIMER
+// ══════════════════════════════════════════════════
+function startTimer() {
+    state.timerInterval = setInterval(() => {
+        if (state.secondsLeft <= 0) {
+            clearInterval(state.timerInterval);
+            return;
+        }
+        state.secondsLeft--;
+        const h = Math.floor(state.secondsLeft / 3600);
+        const m = Math.floor((state.secondsLeft % 3600) / 60);
+        const s = state.secondsLeft % 60;
+        document.getElementById('timer').textContent =
+            `${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    }, 1000);
+}
+
+// ══════════════════════════════════════════════════
+// NAVIGATION
+// ══════════════════════════════════════════════════
+function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById('screen-' + id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function setPhase(index) {
+    document.querySelectorAll('.phase-indicator').forEach((el, i) => {
+        el.classList.remove('active', 'done');
+        if (i < index) el.classList.add('done');
+        if (i === index) el.classList.add('active');
+    });
+}
+
+// ══════════════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════════════
+function selectRadio(el, val) {
+    document.querySelectorAll('.radio-option').forEach(o => o.classList.remove('selected'));
+    el.classList.add('selected');
+    state.selectedRadio = val;
+    checkPhase1Ready();
+}
+
+function updateCharCount(id, countId) {
+    const val = document.getElementById(id).value;
+    const words = val.trim() ? val.trim().split(/\s+/).length : 0;
+    const chars = val.length;
+    // For phase2/3, show words; for phase1, show chars
+    if (id === 'phase2-text' || id === 'phase3-text') {
+        document.getElementById(countId).textContent = words;
+    } else {
+        document.getElementById(countId).textContent = chars;
+    }
+    if (id === 'phase1-analysis') {
+        state.phase1Analysis = val;
+        checkPhase1Ready();
+    }
+    if (id === 'phase2-text') {
+        state.phase2Text = val;
+        document.getElementById('btn-phase2').disabled = words < 50;
+    }
+    if (id === 'phase3-text') {
+        state.phase3Text = val;
+        document.getElementById('btn-phase3').disabled = words < 50;
+    }
+}
+
+function checkPhase1Ready() {
+    const ok = state.selectedRadio && document.getElementById('phase1-analysis').value.length >= 200;
+    document.getElementById('btn-phase1').disabled = !ok;
+}
+
+// ══════════════════════════════════════════════════
+// SESSION START
+// ══════════════════════════════════════════════════
+function startSession() {
+    startTimer();
+    showScreen('phase1');
+    setPhase(0);
+}
+
+// ══════════════════════════════════════════════════
+// CLAUDE API CALL
+// ══════════════════════════════════════════════════
+async function callClaude(systemPrompt, userMessage) {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            system: systemPrompt,
+            messages: [{ role: 'user', content: userMessage }]
+        })
+    });
+    const data = await response.json();
+    return data.content[0].text;
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 1 SUBMIT
+// ══════════════════════════════════════════════════
+async function submitPhase1() {
+    document.getElementById('btn-phase1').disabled = true;
+    showScreen('feedback1');
+    setPhase(1);
+
+    const system = `Tu es un évaluateur pédagogique senior spécialisé en communication professionnelle. 
+Tu analyses la capacité d'un étudiant à distinguer un écrit professionnel efficace d'un écrit médiocre.
+
+Contexte : Le Texte B est le texte professionnel efficace. Il présente des données chiffrées précises, une structure claire (résultats / point de vigilance / recommandation), un ton adapté à la relation hiérarchique, et une conclusion orientée action. Le Texte A est vague, sans données, sans structure, avec un registre familier inadapté.
+
+Ta réponse DOIT être un JSON valide avec exactement ce format :
+{
+  "score": <entier entre 0 et 10>,
+  "verdict": "<une phrase courte qualifiant l'analyse>",
+  "feedback": "<3 à 5 paragraphes d'analyse, directs et pédagogiques, sans condescendance>"
+}`;
+
+    const user = `L'étudiant a choisi : Texte ${state.selectedRadio}
+Son analyse : "${document.getElementById('phase1-analysis').value}"`;
+
+    try {
+        const raw = await callClaude(system, user);
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        state.score1 = parsed.score;
+
+        document.getElementById('f1-score').textContent = parsed.score + '/10';
+        document.getElementById('f1-verdict').textContent = parsed.verdict;
+        document.getElementById('f1-feedback-text').textContent = parsed.feedback;
+        document.getElementById('feedback1-loading').style.display = 'none';
+        document.getElementById('feedback1-result').classList.add('visible');
+        document.getElementById('btn-to-phase2').disabled = false;
+    } catch(e) {
+        document.getElementById('feedback1-loading').innerHTML = '<p style="color:var(--accent)">Erreur lors de l\'analyse. Vérifiez votre connexion et rechargez.</p>';
+    }
+}
+
+// ══════════════════════════════════════════════════
+// GO TO PHASE 2
+// ══════════════════════════════════════════════════
+function goToPhase2() {
+    showScreen('phase2');
+    setPhase(2);
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 2 SUBMIT
+// ══════════════════════════════════════════════════
+async function submitPhase2() {
+    document.getElementById('btn-phase2').disabled = true;
+    document.getElementById('original-text-display').textContent = state.phase2Text;
+    showScreen('feedback2');
+    setPhase(3);
+
+    const system = `Tu es un évaluateur expert en communication professionnelle. Tu analyses un communiqué de presse rédigé par un étudiant en formation.
+
+Le brief était : Chargé(e) de comm chez Vélocité (startup mobilité urbaine). Un article négatif sort demain sur des vélos défectueux à Bellevue (9/80 vélos signalés, taux 11,25% vs 8% secteur). Révision complète déclenchée depuis 72h. Mission : communiqué de presse qui reconnaît les faits, présente les mesures, protège la réputation.
+
+Évalue sur 5 dimensions (0-4 pts chacune) :
+1. Structure (clarté, organisation, logique)
+2. Ton (adapté à la presse, ni défensif ni complaisant)
+3. Précision factuelle (données, chiffres, concret)
+4. Concision (rapport signal/bruit)
+5. Impact (force de la conclusion, orientation action)
+
+Ta réponse DOIT être un JSON valide :
+{
+  "score": <total /20>,
+  "verdict": "<phrase courte qualifiant la production>",
+  "dimensions": [
+    {"name": "Structure", "score": <0-4>, "note": "<observation courte>"},
+    {"name": "Ton", "score": <0-4>, "note": "<observation courte>"},
+    {"name": "Précision factuelle", "score": <0-4>, "note": "<observation courte>"},
+    {"name": "Concision", "score": <0-4>, "note": "<observation courte>"},
+    {"name": "Impact", "score": <0-4>, "note": "<observation courte>"}
+  ],
+  "feedback": "<analyse détaillée en 4-6 paragraphes, directe, pédagogique, sans condescendance. Identifie précisément ce qui ne fonctionne pas et pourquoi, avec des exemples tirés du texte.>"
+}`;
+
+    const user = `Communiqué rédigé par l'étudiant :\n\n${state.phase2Text}`;
+
+    try {
+        const raw = await callClaude(system, user);
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        state.score2 = parsed.score;
+
+        document.getElementById('f2-score').textContent = parsed.score + '/20';
+        document.getElementById('f2-verdict').textContent = parsed.verdict;
+        document.getElementById('f2-feedback-text').textContent = parsed.feedback;
+
+        // Dimensions
+        const grid = document.getElementById('dimensions-grid');
+        grid.innerHTML = parsed.dimensions.map(d => `
+            <div class="dimension-item">
+                <div class="dimension-name">${d.name}</div>
+                <div class="dimension-bar-bg">
+                    <div class="dimension-bar-fill" style="width:${(d.score/4)*100}%"></div>
+                </div>
+                <div class="dimension-score">${d.score}/4 — <span style="font-weight:300;color:var(--ink-light)">${d.note}</span></div>
+            </div>
+        `).join('');
+
+        document.getElementById('feedback2-loading').style.display = 'none';
+        document.getElementById('feedback2-result').classList.add('visible');
+        document.getElementById('rewrite-card').style.display = 'block';
+    } catch(e) {
+        document.getElementById('feedback2-loading').innerHTML = '<p style="color:var(--accent)">Erreur lors de l\'analyse.</p>';
+    }
+}
+
+// ══════════════════════════════════════════════════
+// PHASE 3 SUBMIT
+// ══════════════════════════════════════════════════
+async function submitPhase3() {
+    document.getElementById('btn-phase3').disabled = true;
+    showScreen('final');
+    setPhase(4);
+
+    const system = `Tu es un évaluateur expert en communication professionnelle. Tu compares deux versions d'un communiqué de presse rédigées par le même étudiant : une version initiale et une réécriture après feedback.
+
+Évalue la version réécrite sur les mêmes 5 dimensions (0-4 pts chacune) : Structure, Ton, Précision factuelle, Concision, Impact.
+
+Ta réponse DOIT être un JSON valide :
+{
+  "score": <total /20>,
+  "verdict": "<phrase qualifiant la progression ou régression>",
+  "comparison": "<analyse comparative en 3-4 paragraphes : ce qui a progressé, ce qui reste à améliorer, ce que cette progression révèle du profil de l'étudiant>",
+  "takeaway": "<3 à 4 points de méthode que l'étudiant doit ancrer définitivement, formulés comme des règles claires, pas comme des conseils généraux>"
+}`;
+
+    const user = `Version initiale :\n\n${state.phase2Text}\n\n---\n\nVersion réécrite :\n\n${state.phase3Text}`;
+
+    try {
+        const raw = await callClaude(system, user);
+        const clean = raw.replace(/```json|```/g, '').trim();
+        const parsed = JSON.parse(clean);
+        state.score3 = parsed.score;
+
+        const finalScore = Math.round((state.score2 + parsed.score) / 2);
+        const progression = parsed.score - state.score2;
+
+        // Badge
+        let icon, title, subtitle;
+        if (finalScore >= 16) { icon = '🏅'; title = 'Maîtrise confirmée'; subtitle = 'Vous démontrez une réelle aisance en rédaction professionnelle.'; }
+        else if (finalScore >= 12) { icon = '✅'; title = 'Niveau validé'; subtitle = 'Les fondamentaux sont maîtrisés. Des marges de progression existent.'; }
+        else { icon = '🔧'; title = 'En cours d\'acquisition'; subtitle = 'Ce module identifie des lacunes sur lesquelles travailler spécifiquement.'; }
+
+        document.getElementById('badge-icon').textContent = icon;
+        document.getElementById('final-title').textContent = title;
+        document.getElementById('final-subtitle').textContent = subtitle;
+        document.getElementById('final-score-display').textContent = finalScore + '/20';
+
+        if (progression > 0) {
+            const note = document.getElementById('progression-note');
+            note.style.display = 'inline-flex';
+            document.getElementById('progression-text').textContent = `+${progression} points entre V1 et V2`;
+        }
+
+        document.getElementById('final-comparison').textContent = parsed.comparison;
+        document.getElementById('final-takeaway').textContent = parsed.takeaway;
+
+    } catch(e) {
+        document.getElementById('final-comparison').textContent = 'Erreur lors du bilan final.';
+    }
+}
+</script>
+</body>
+</html>
